@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Double Slit Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="logic.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js"></script>
+  </head>
+  <body>
+    <div id="intensityCurve"></div>
+
+    <div class="container">
+      <h2>Select Conditions</h2>
+      <form id="particleForm">
+        <label for="slit">Number of Slits</label>
+        <select id="slit" name="slit">
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+
+        <label for="particle">Enter Particle</label>
+        <select id="particle" name="particle">
+          <option value="Photon">Photon</option>
+          <option value="Electron">Electron</option>
+          <option value="Proton">Proton</option>
+        </select>
+      </form>
+
+      <form id="photonForm">
+        <label for="wavelength">Photon wavelength (nm):</label>
+        <input
+          type="number"
+          id="wavelength"
+          name="wavelength"
+          min="1"
+          placeholder="wavelength..."
+          value="550"
+        />
+
+        <label for="slitDistance">Distance between slits (μm):</label>
+        <input
+          type="number"
+          id="slitDistance"
+          name="slitDistance"
+          min=".001"
+          placeholder="Slit Distance..."
+          value="10"
+        />
+
+        <label for="slitWidth">Slit Width (nm):</label>
+        <input
+          type="number"
+          id="slitWidth"
+          name="slitWidth"
+          min="1"
+          placeholder="Slit Width..."
+          value="3000"
+        />
+
+        <label for="screenDistance">Distance To Screen (m):</label>
+        <input
+          type="number"
+          id="screenDistance"
+          name="screenDistance"
+          min="1"
+          placeholder="Screen Distance..."
+          value="1"
+        />
+
+        <label for="intensity">Intensity (W/m^2):</label>
+        <input
+          type="number"
+          id="intensity"
+          name="intensity"
+          min="1"
+          placeholder="Intensity..."
+          value="4"
+        />
+
+        <button type="button" onclick="graphPhoton()">Graph</button>
+      </form>
+
+      <form id="massForm">
+        <label for="wavelength">Enter a wavelength (nm):</label>
+        <input
+          type="number"
+          id="wavelength"
+          name="wavelength"
+          min="1"
+          placeholder="Enter wavelength..."
+        />
+
+        <label for="size">Enter size in cm:</label>
+        <input
+          type="number"
+          id="size"
+          name="size"
+          min="1"
+          placeholder="Enter size..."
+        />
+        <label for="mediumTemp"
+          >Enter the temperature of the medium in Fahrenheit:</label
+        >
+        <input
+          type="number"
+          id="mediumTemp"
+          name="mediumTemp"
+          min="-459.67"
+          placeholder="Enter temperature..."
+        />
+
+        <label for="objectTemp"
+          >Enter the temperature of the object in Fahrenheit:</label
+        >
+        <input
+          type="number"
+          id="objectTemp"
+          name="objectTemp"
+          min="-459.67"
+          placeholder="Enter temperature..."
+        />
+
+        <button type="button" onclick="drawVolume()" py-click="onSubmit">
+          Graph
+        </button>
+      </form>
+
+      <svg id="intensityGraph" height="300" width="300">HEre</svg>
+    </div>
+    <div id="plot"></div>
+  </body>
+</html>
