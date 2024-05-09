@@ -26,10 +26,20 @@
           <option value="Electron">Electron</option>
           <option value="Proton">Proton</option>
         </select>
+
+        <label for="xAxis">Positive side X-Axis Domain [m]:</label>
+        <input
+          type="number"
+          id="xAxis"
+          name="xAxis"
+          min=".000001"
+          placeholder="x-axis Width..."
+          value="1"
+        />
       </form>
 
       <form id="photonForm">
-        <label for="wavelength">Photon wavelength (nm):</label>
+        <label for="wavelength">Photon wavelength [nm]:</label>
         <input
           type="number"
           id="wavelength"
@@ -39,7 +49,7 @@
           value="550"
         />
 
-        <label for="slitDistance">Distance between slits (μm):</label>
+        <label for="slitDistance">Distance between slits [μm]:</label>
         <input
           type="number"
           id="slitDistance"
@@ -49,7 +59,7 @@
           value="10"
         />
 
-        <label for="slitWidth">Slit Width (nm):</label>
+        <label for="slitWidth">Slit Width [nm]:</label>
         <input
           type="number"
           id="slitWidth"
@@ -59,7 +69,7 @@
           value="3000"
         />
 
-        <label for="screenDistance">Distance To Screen (m):</label>
+        <label for="screenDistance">Distance To Screen [m]:</label>
         <input
           type="number"
           id="screenDistance"
@@ -69,7 +79,7 @@
           value="1"
         />
 
-        <label for="intensity">Intensity (W/m^2):</label>
+        <label for="intensity">Intensity [W/m^2]:</label>
         <input
           type="number"
           id="intensity"
@@ -79,55 +89,21 @@
           value="4"
         />
 
+        <button type="button" onclick="draw1()">Draw 1</button>
+        <button type="button" onclick="draw10()">Draw 10</button>
+        <button type="button" onclick="draw100()">Draw 100</button>
+        <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
         <button type="button" onclick="graphPhoton()">Graph</button>
       </form>
 
       <form id="massForm">
-        <label for="wavelength">Enter a wavelength (nm):</label>
-        <input
-          type="number"
-          id="wavelength"
-          name="wavelength"
-          min="1"
-          placeholder="Enter wavelength..."
-        />
-
-        <label for="size">Enter size in cm:</label>
-        <input
-          type="number"
-          id="size"
-          name="size"
-          min="1"
-          placeholder="Enter size..."
-        />
-        <label for="mediumTemp"
-          >Enter the temperature of the medium in Fahrenheit:</label
-        >
-        <input
-          type="number"
-          id="mediumTemp"
-          name="mediumTemp"
-          min="-459.67"
-          placeholder="Enter temperature..."
-        />
-
-        <label for="objectTemp"
-          >Enter the temperature of the object in Fahrenheit:</label
-        >
-        <input
-          type="number"
-          id="objectTemp"
-          name="objectTemp"
-          min="-459.67"
-          placeholder="Enter temperature..."
-        />
-
         <button type="button" onclick="drawVolume()" py-click="onSubmit">
           Graph
         </button>
       </form>
 
-      <svg id="intensityGraph" height="300" width="300">HEre</svg>
+      <svg id="scatterPlot" height="300" width="300"></svg>
+      <svg id="intensityGraph" height="300" width="300"></svg>
     </div>
     <div id="plot"></div>
   </body>
