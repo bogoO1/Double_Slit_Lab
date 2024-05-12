@@ -271,14 +271,6 @@ function createScatterPlot() {
   // Create y axis
   const yAxis = d3.axisLeft(yScale).ticks(15).tickSizeOuter(0).tickSize(-width);
 
-  // Append y axis to the SVG
-  svg
-    .append("g")
-    .attr("transform", "translate(" + xScale(0) + ",0)") // Translate y-axis to the center
-    .call(yAxis)
-    .selectAll("line")
-    .attr("stroke", "lightgray")
-    .attr("transform", "translate(" + -width / 2 + ",0)"); // Translate y-axis to the center; // Set grid line color
   // TODO: One of these tick lines overrides the x-axis.
 
   // Append SVG Object to the Page
@@ -286,47 +278,6 @@ function createScatterPlot() {
   // .attr("transform", "translate(" + margin + "," + margin + ")");
 
   // Dots
-
-  // svg
-  //   .append("g")
-  //   .selectAll("dot")
-  //   .data(data)
-  //   .enter()
-  //   .append("circle")
-  //   .attr("cx", function (d) {
-  //     return xScale(d[0]);
-  //   })
-  //   .attr("cy", function (d) {
-  //     return yScale(d[1]);
-  //   })
-  //   .attr("r", 2)
-  //   // .attr("transform", "translate(" + 100 + "," + 100 + ")")
-  //   .style("fill", "#CC0000");
-  // Create the scatter variable: where both the circles and the brush take place
-  // Add a clipPath: everything out of this area won't be drawn.
-
-  // let zoom = d3.zoom().on("zoom", handleZoom);
-
-  // function handleZoom(e) {
-  //   svg.attr("transform", e.transform);
-  //   // d3.select("svg g").selectAll("circle").attr("transform", e.transform);
-  // }
-
-  // function initZoom() {
-  //   d3.select("svg").call(zoom);
-  // }
-
-  // initZoom();
-
-  // Title
-  svg
-    .append("text")
-    .attr("x", width / 2 + 100)
-    .attr("y", 100)
-    .attr("text-anchor", "middle")
-    .style("font-family", "Helvetica")
-    .style("font-size", 20)
-    .text("Double Slit Intensity");
 
   // X label
   svg
@@ -337,20 +288,11 @@ function createScatterPlot() {
     .style("font-family", "Helvetica")
     .style("font-size", 12)
     .text("y[m]");
-
-  // Y label
-  svg
-    .append("text")
-    .attr("text-anchor", "middle")
-    .attr("transform", "translate(60," + height + ")rotate(-90)")
-    .style("font-family", "Helvetica")
-    .style("font-size", 12)
-    .text("Intensity[W/m^2]");
 }
 
 var scatterPlotData = [];
 // TODO: redo the graphing with a canvas element.
-function drawDot(functionArray, arraySum) {
+function drawDot(functionArray, arraySum, points) {
   if (isGraphed == false) {
     createScatterPlot();
   }
@@ -365,7 +307,7 @@ function drawDot(functionArray, arraySum) {
     width = screenWidth - margin.left - margin.right,
     height = screenHeight - margin.top - margin.bottom;
 
-  const numPoints = 1;
+  const numPoints = points;
   var newData = [];
   for (let i = 0; i < numPoints; i++) {
     let randomNum = Math.floor(Math.random() * arraySum) + 1;
@@ -446,7 +388,7 @@ function draw1() {
 
   if (functionArray == false) return;
 
-  drawDot(functionArray, functionArray[functionArray.length - 1]);
+  drawDot(functionArray, functionArray[functionArray.length - 1], 1);
 }
 
 function draw10() {}
@@ -456,9 +398,7 @@ function draw100() {
 
   if (functionArray == false) return;
 
-  for (let i = 0; i < 100; i++) {
-    drawDot(functionArray, functionArray[functionArray.length - 1]);
-  }
+  drawDot(functionArray, functionArray[functionArray.length - 1], 100);
 }
 
 function eraseGraphs() {
