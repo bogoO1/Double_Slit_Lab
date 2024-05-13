@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Double Slit Lab</title>
+    <title>n Slit Lab</title>
     <link rel="stylesheet" href="styles.css" />
     <script src="logic.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js"></script>
@@ -12,12 +12,13 @@
     <div id="intensityCurve"></div>
 
     <div class="container">
-      <h2>Select Conditions</h2>
+      <h2>n Slit Lab</h2>
       <form id="particleForm">
         <label for="slit">Number of Slits</label>
         <select id="slit" name="slit">
           <option value="1">1</option>
-          <option value="2">2</option>
+          <option value="2" selected="selected">2</option>
+          <option value="n">n</option>
         </select>
 
         <label for="particle">Enter Particle</label>
@@ -25,6 +26,7 @@
           <option value="Photon">Photon</option>
           <option value="Electron">Electron</option>
           <option value="Proton">Proton</option>
+          <option value="Mass">Mass</option>
         </select>
 
         <label for="xAxis">Positive side X-Axis Domain [m]:</label>
@@ -36,27 +38,29 @@
           placeholder="x-axis Width..."
           value="1"
         />
-      </form>
 
-      <form id="photonForm">
-        <label for="wavelength">Photon wavelength [nm]:</label>
+        <label class="for2Slit" for="slitDistance"
+          >Distance between slits [μm]:</label
+        >
         <input
-          type="number"
-          id="wavelength"
-          name="wavelength"
-          min="1"
-          placeholder="wavelength..."
-          value="550"
-        />
-
-        <label for="slitDistance">Distance between slits [μm]:</label>
-        <input
+          class="for2Slit"
           type="number"
           id="slitDistance"
           name="slitDistance"
           min=".001"
           placeholder="Slit Distance..."
           value="10"
+        />
+
+        <label class="forNSlit hidden" for="lines/mm">lines/mm:</label>
+        <input
+          class="forNSlit hidden"
+          type="number"
+          id="lines/mm"
+          name="lines/mm"
+          min=".0000001"
+          placeholder="lines/mm..."
+          value="1000"
         />
 
         <label for="slitWidth">Slit Width [nm]:</label>
@@ -78,6 +82,18 @@
           placeholder="Screen Distance..."
           value="1"
         />
+      </form>
+
+      <form id="photonForm">
+        <label for="wavelength">Photon wavelength [nm]:</label>
+        <input
+          type="number"
+          id="wavelength"
+          name="wavelength"
+          min="1"
+          placeholder="wavelength..."
+          value="550"
+        />
 
         <label for="intensity">Intensity [W/m^2]:</label>
         <input
@@ -88,23 +104,49 @@
           placeholder="Intensity..."
           value="4"
         />
+      </form>
 
-        <button type="button" onclick="draw1()">Draw 1</button>
-        <button type="button" onclick="draw10()">Draw 10</button>
-        <button type="button" onclick="draw100()">Draw 100</button>
-        <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
-        <button type="button" onclick="graphPhoton()">Graph</button>
+      <form id="atomicMassForm">
+        <!-- ask for energy -->
+        <label for="energy">Energy [eV]:</label>
+        <input
+          type="number"
+          id="energy"
+          name="energy"
+          placeholder="Energy..."
+          value="1"
+        />
       </form>
 
       <form id="massForm">
-        <button type="button" onclick="drawVolume()" py-click="onSubmit">
-          Graph
-        </button>
+        <!-- ask for energy -->
+        <label for="velocity">Velocity [m/s]:</label>
+        <input
+          type="number"
+          id="velocity"
+          name="velocity"
+          placeholder="Velocity..."
+          value="1"
+        />
+
+        <label for="mass">Mass [kg]:</label>
+        <input
+          type="number"
+          id="mass"
+          name="mass"
+          placeholder="Mass..."
+          value="1"
+        />
       </form>
 
-      <svg id="scatterPlot" height="300" width="300"></svg>
-      <svg id="intensityGraph" height="300" width="300"></svg>
+      <button type="button" onclick="drawDots(1)">Draw 1</button>
+      <button type="button" onclick="drawDots(100)">Draw 100</button>
+      <button type="button" onclick="drawDots(1000)">Draw 1000</button>
+      <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
+      <button type="button" onclick="graphPhoton()">Graph</button>
     </div>
+    <svg id="scatterPlot" height="300" width="300"></svg>
+    <svg id="intensityGraph" height="300" width="300"></svg>
     <div id="plot"></div>
   </body>
 </html>

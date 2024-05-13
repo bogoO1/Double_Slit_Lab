@@ -1,66 +1,223 @@
+var numSlits = 2;
+var particleType = "Photon";
+
+const massOfParticles = {
+  Electron: 9.1093837e-31,
+  Proton: 1.67262192e-27,
+};
+
 window.onload = function () {
   var particleForm = document.getElementById("particleForm");
-  var massForm = document.getElementById("massForm");
+  var atomicMassForm = document.getElementById("atomicMassForm");
   var photonForm = document.getElementById("photonForm");
+  var massForm = document.getElementById("massForm");
 
-  particleForm.addEventListener("input", function (e) {
+  function makeFormsInvisible() {
+    atomicMassForm.style.display = "none";
+    photonForm.style.display = "none";
+    massForm.style.display = "none";
+  }
+
+  document.getElementById("particle").addEventListener("input", function (e) {
+    makeFormsInvisible();
     var particle = e.target.value;
     if (particle == "Photon") {
-      massForm.style.display = "none";
+      particleType = "Photon";
       photonForm.style.display = "block";
     } else if (particle == "Electron" || particle == "Proton") {
+      particleType = particle;
+      atomicMassForm.style.display = "block";
+    } else if (particle == "Mass") {
+      particleType = particle;
       massForm.style.display = "block";
-      photonForm.style.display = "none";
     }
   });
   document.getElementById("xAxis").addEventListener("input", function (e) {
     if (e.target.value > 0) {
       graphPhoton();
       eraseGraphs();
-      draw100();
     } else {
       eraseGraphs();
     }
   });
+
+  function makeSlitsInvisible() {
+    let elements = [
+      ...document.querySelectorAll(".for2Slit"),
+      ...document.querySelectorAll(".forNSlit"),
+    ];
+
+    elements.forEach(function (element) {
+      element.classList.add("hidden");
+    });
+  }
+
+  function makeSlitsVisible(elements) {
+    elements.forEach(function (element) {
+      element.classList.remove("hidden");
+    });
+  }
+
+  document.getElementById("slit").addEventListener("input", function (e) {
+    makeSlitsInvisible();
+    if (e.target.value == "1") {
+      numSlits = 1;
+    } else if (e.target.value == "2") {
+      makeSlitsVisible(document.querySelectorAll(".for2Slit"));
+      numSlits = 2;
+    } else if (e.target.value == "n") {
+      makeSlitsVisible(document.querySelectorAll(".forNSlit"));
+      numSlits = 0;
+    }
+  });
+
+  window.addEventListener(
+    "error",
+    function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    false
+  );
 };
 
 var isGraphed = false;
 
+function getDistanceBetweenSlits() {
+  if (numSlits == 1) {
+    return 0;
+  } else if (numSlits == 2) {
+    let d = Number(document.getElementById("slitDistance").value);
+    if (typeof d !== "number" || d <= 0) {
+      throw "Inputs must all be numbers greater than zero";
+    }
+    return d * 1e-6;
+  } else if (numSlits == 0) {
+    // n-slits
+
+    let linesPermm = Number(document.getElementById("lines/mm").value);
+    if (typeof linesPermm !== "number" || linesPermm <= 0) {
+      throw "Inputs must all be numbers greater than zero";
+    }
+
+    let d = (1 / linesPermm) * 1e-3;
+
+    return d;
+  }
+}
+
 function getInputVariables() {
-  let lambda = Number(document.getElementById("wavelength").value);
-  let d = Number(document.getElementById("slitDistance").value);
   let a = Number(document.getElementById("slitWidth").value);
   let L = Number(document.getElementById("screenDistance").value);
-  let I = Number(document.getElementById("intensity").value);
   let xAxisWidth = Number(document.getElementById("xAxis").value);
-  // check if undefined or nill
+
   if (
-    typeof lambda !== "number" ||
-    typeof d !== "number" ||
     typeof a !== "number" ||
     typeof L !== "number" ||
-    typeof I !== "number" ||
     typeof xAxisWidth !== "number"
   ) {
-    sys.exit("Inputs must all be numbers");
+    throw "Inputs must all be numbers";
   }
 
-  if (xAxisWidth <= 0) {
-    sys.exit("x-Axis width must be greater than zero");
-  }
-
-  lambda *= 1e-9;
-  d *= 1e-6;
   a *= 1e-9;
   L *= 1;
-  I *= 1;
   xAxisWidth *= 1;
+  // TODO: Test with scientific number inputs also allow enter to graph the function
+  if (photonForm.style.display == "none") {
+    // Particle has mass
+    if (particleType == "Mass") {
+      var mass = Number(document.getElementById("mass").value);
+      var velocity = Number(document.getElementById("velocity").value);
+      var energy = 1;
+    } else {
+      // atomic mass
+      var mass = massOfParticles[particleType];
+      var energy = Number(document.getElementById("energy").value);
+    }
 
-  return [lambda, d, a, L, I, xAxisWidth];
+    let d = Number(document.getElementById("slitDistance").value);
+    // check if undefined or nill
+    if (
+      typeof d !== "number" ||
+      typeof a !== "number" ||
+      typeof L !== "number" ||
+      typeof energy !== "number" ||
+      typeof xAxisWidth !== "number" ||
+      typeof mass !== "number" ||
+      typeof velocity !== "number"
+    ) {
+      throw "Inputs must all be numbers";
+    }
+
+    if (xAxisWidth <= 0) {
+      throw "x-Axis width must be greater than zero";
+    }
+    if (energy <= 0) {
+      throw "Energy must be greater than zero";
+    }
+
+    d *= 1e-6;
+    energy *= 1;
+
+    const c = 299_792_458;
+
+    if (particleType == "Mass") {
+      let gamma = 1 / Math.sqrt(1 - (velocity / c) ** 2);
+
+      energy = gamma * Math.pow(mass * Math.pow(c, 2), 2);
+
+      var lambda = 6.262e-34 / (mass * velocity);
+    } else {
+      let momentum = Math.sqrt(
+        (Math.pow(energy, 2) - Math.pow(mass * Math.pow(c, 2), 2)) /
+          Math.pow(c, 2)
+      );
+
+      var lambda = 4.136e-15 / momentum;
+    }
+
+    d = getDistanceBetweenSlits();
+
+    return [lambda, d, a, L, 1, xAxisWidth];
+  } else {
+    // Photon
+    let lambda = Number(document.getElementById("wavelength").value);
+    let d = Number(document.getElementById("slitDistance").value);
+    let I = Number(document.getElementById("intensity").value);
+    // check if undefined or nill
+    if (
+      typeof lambda !== "number" ||
+      typeof d !== "number" ||
+      typeof a !== "number" ||
+      typeof L !== "number" ||
+      typeof I !== "number" ||
+      typeof xAxisWidth !== "number"
+    ) {
+      throw "Inputs must all be numbers";
+    }
+
+    if (xAxisWidth <= 0) {
+      throw "x-Axis width must be greater than zero";
+    }
+
+    lambda *= 1e-9;
+    d *= 1e-6;
+    I *= 1;
+
+    d = getDistanceBetweenSlits();
+
+    return [lambda, d, a, L, I, xAxisWidth];
+  }
 }
 
 function graphPhoton() {
-  let [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  try {
+    var [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  } catch (err) {
+    console.error(err);
+    alert(err);
+    throw "";
+  }
 
   var svg = d3.select("#intensityGraph");
 
@@ -94,14 +251,7 @@ function graphPhoton() {
   const sineData = d3
     .range(-xAxisWidth, xAxisWidth, (2 * xAxisWidth) / 10_000)
     .map(function (x) {
-      let theta = Math.atan(x / L);
-      let beta = (Math.PI * a * Math.sin(theta)) / lambda;
-      let singleSlitIntensity = 4 * I * Math.pow(Math.sin(beta) / beta, 2);
-
-      let doubleSlitIntensity =
-        singleSlitIntensity *
-        Math.pow(Math.cos((Math.PI * d * x) / (lambda * L)), 2);
-      return { x: x, y: doubleSlitIntensity };
+      return { x: x, y: getIntensityValue(x, lambda, d, a, L, I, xAxisWidth) };
     });
 
   // Create a line generator
@@ -213,7 +363,14 @@ var xScale;
 var yScale;
 
 function createScatterPlot() {
-  let [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  try {
+    var [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  } catch (err) {
+    console.error(err);
+    alert(err);
+    throw "";
+  }
+
   const screenWidth = window.innerWidth;
   const screenHeight = (window.innerWidth * 2) / 3;
 
@@ -291,14 +448,20 @@ function createScatterPlot() {
 }
 
 var scatterPlotData = [];
-// TODO: redo the graphing with a canvas element.
 function drawDot(functionArray, arraySum, points) {
   if (isGraphed == false) {
     createScatterPlot();
   }
   isGraphed = true;
 
-  let [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  try {
+    var [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  } catch (err) {
+    console.error(err);
+    alert(err);
+    throw "";
+  }
+
   const screenWidth = window.innerWidth;
   const screenHeight = (window.innerWidth * 2) / 3;
 
@@ -354,8 +517,32 @@ function drawDot(functionArray, arraySum, points) {
     .style("fill", "Red")
     .style("opacity", 0.75);
 }
+
+function getIntensityValue(x, lambda, d, a, L, I, xAxisWidth) {
+  let theta = Math.atan(x / L);
+  let beta = (Math.PI * a * Math.sin(theta)) / lambda;
+  let singleSlitIntensity = 4 * I * Math.pow(Math.sin(beta) / beta, 2);
+
+  if (numSlits == 1) {
+    return singleSlitIntensity;
+  }
+
+  let doubleSlitIntensity =
+    singleSlitIntensity *
+    Math.pow(Math.cos((Math.PI * d * x) / (lambda * L)), 2);
+
+  return doubleSlitIntensity;
+}
+
 function getFunctionArray() {
-  let [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  try {
+    var [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  } catch (err) {
+    console.error(err);
+    alert(err);
+    throw "";
+  }
+
   const range = 10000;
 
   const functionArray = d3.range(0, range, 1).map(function (x) {
@@ -365,15 +552,7 @@ function getFunctionArray() {
       return 4 * I;
     }
 
-    let theta = Math.atan(x / L);
-    let beta = (Math.PI * a * Math.sin(theta)) / lambda;
-    let singleSlitIntensity = 4 * I * Math.pow(Math.sin(beta) / beta, 2);
-
-    let doubleSlitIntensity =
-      singleSlitIntensity *
-      Math.pow(Math.cos((Math.PI * d * x) / (lambda * L)), 2);
-
-    return doubleSlitIntensity;
+    return getIntensityValue(x, lambda, d, a, L, I, xAxisWidth);
   });
 
   for (let i = 1; i < functionArray.length; i++) {
@@ -383,22 +562,12 @@ function getFunctionArray() {
   return functionArray;
 }
 
-function draw1() {
+function drawDots(numDots) {
   const functionArray = getFunctionArray();
 
   if (functionArray == false) return;
 
-  drawDot(functionArray, functionArray[functionArray.length - 1], 1);
-}
-
-function draw10() {}
-
-function draw100() {
-  const functionArray = getFunctionArray();
-
-  if (functionArray == false) return;
-
-  drawDot(functionArray, functionArray[functionArray.length - 1], 100);
+  drawDot(functionArray, functionArray[functionArray.length - 1], numDots);
 }
 
 function eraseGraphs() {
