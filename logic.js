@@ -133,6 +133,7 @@ function getInputVariables() {
       // atomic mass
       var mass = massOfParticles[particleType];
       var energy = Number(document.getElementById("energy").value);
+      var velocity = 1;
     }
 
     let d = Number(document.getElementById("slitDistance").value);
@@ -249,7 +250,7 @@ function graphPhoton() {
 
   // Generate the sine wave data
   const sineData = d3
-    .range(-xAxisWidth, xAxisWidth, (2 * xAxisWidth) / 10_000)
+    .range(-xAxisWidth, xAxisWidth, (2 * xAxisWidth) / 100_000)
     .map(function (x) {
       return { x: x, y: getIntensityValue(x, lambda, d, a, L, I, xAxisWidth) };
     });
@@ -543,7 +544,7 @@ function getFunctionArray() {
     throw "";
   }
 
-  const range = 10000;
+  const range = 100_000;
 
   const functionArray = d3.range(0, range, 1).map(function (x) {
     x = x * ((2 * xAxisWidth) / range) - xAxisWidth;
