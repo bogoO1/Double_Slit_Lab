@@ -143,9 +143,13 @@
       <button type="button" onclick="drawDots(100)">Draw 100</button>
       <button type="button" onclick="drawDots(1000)">Draw 1000</button>
       <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
+      <button type="button" onclick="drawShadedGraph()">
+        Draw Shaded Graph
+      </button>
       <button type="button" onclick="graphPhoton()">Graph</button>
     </div>
-    <svg id="scatterPlot" height="300" width="300"></svg>
+    <svg id="scatterPlot" class="hidden" height="300" width="300"></svg>
+    <svg id="linePlot" class="hidden" height="300" width="300"></svg>
     <svg id="intensityGraph" height="300" width="300"></svg>
     <div id="plot"></div>
   </body>

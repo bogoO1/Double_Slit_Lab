@@ -1,5 +1,8 @@
+// TODO: Allow masses to be high by making the output be two vertical lines.
+
 var numSlits = 2;
 var particleType = "Photon";
+var isLineGraphed = false;
 
 const massOfParticles = {
   Electron: 9.1093837e-31,
@@ -363,7 +366,7 @@ function binarySearch(array, value, l, r) {
 var xScale;
 var yScale;
 
-function createScatterPlot() {
+function createScatterPlot(plot) {
   try {
     var [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
   } catch (err) {
@@ -395,7 +398,7 @@ function createScatterPlot() {
 
   // append the svg object to the body of the page
   var svg = d3
-    .select("#scatterPlot")
+    .select("#" + plot)
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -451,7 +454,7 @@ function createScatterPlot() {
 var scatterPlotData = [];
 function drawDot(functionArray, arraySum, points) {
   if (isGraphed == false) {
-    createScatterPlot();
+    createScatterPlot("scatterPlot");
   }
   isGraphed = true;
 
@@ -564,67 +567,112 @@ function getFunctionArray() {
 }
 
 function drawDots(numDots) {
+  document.querySelector("#scatterPlot").classList.remove("hidden");
+
   const functionArray = getFunctionArray();
 
   if (functionArray == false) return;
 
   drawDot(functionArray, functionArray[functionArray.length - 1], numDots);
 }
+var linePlotData = [];
+function drawShadedGraph() {
+  document.querySelector("#linePlot").classList.remove("hidden");
+
+  const functionArray = getFunctionArray();
+
+  if (functionArray == false) return;
+
+  // if (isLineGraphed == true) {
+  //   return;
+  // }
+  isLineGraphed = true;
+
+  createScatterPlot("linePlot");
+
+  try {
+    var [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
+  } catch (err) {
+    console.error(err);
+    alert(err);
+    throw "";
+  }
+
+  const screenWidth = window.innerWidth;
+  const screenHeight = (window.innerWidth * 2) / 3;
+
+  var svg = d3.select("#linePlot");
+  var margin = { top: 25, right: 25, bottom: 25, left: 25 },
+    width = screenWidth - margin.left - margin.right,
+    height = screenHeight - margin.top - margin.bottom;
+
+  const numPoints = 100_000;
+  var newData = [];
+  // for (let i = 0; i < numPoints; i++) {
+  //   let index = i;
+
+  //   let xPos =
+  //     index * ((2 * xAxisWidth) / (functionArray.length - 1)) - xAxisWidth;
+
+  //   let intensity = functionArray[index];
+  //   if (index > 0) {
+  //     intensity -= functionArray[index - 1];
+  //   }
+
+  //   newData.push([xPos, intensity]);
+  // }
+  for (let i = 0; i < functionArray[functionArray.length - 1]; i++) {
+    let index = binarySearch(functionArray, i, 0, functionArray.length - 1);
+
+    let xPos =
+      index * ((2 * xAxisWidth) / (functionArray.length - 1)) - xAxisWidth;
+
+    // intensity is different of currend and prev index, unless index is zero.
+    let intensity = functionArray[index];
+    if (index > 0) {
+      intensity -= functionArray[index - 1];
+    }
+
+    intensity = Math.random() * 4.0 * I;
+
+    newData.push([xPos, intensity]);
+  }
+  // Update your existing data array with the new data
+  linePlotData = linePlotData.concat(newData); // Concatenate the new data with the existing data array
+
+  // Append new data points to the scatter plot
+  svg
+    .append("g")
+    .selectAll("circle")
+    .data(linePlotData)
+    .enter()
+    .append("rect")
+    .attr("x", function (d) {
+      return xScale(d[0]);
+    })
+    .attr("y", function (d) {
+      return -25;
+    })
+    .attr("transform", "translate(" + "25" + "," + 25 + ")")
+    .attr("width", width / 100_000)
+    .attr("height", height)
+    .style("fill", "Red")
+    .style("opacity", function (d) {
+      return d[1] / I ** 2;
+    });
+}
 
 function eraseGraphs() {
   const svg = d3.select("#scatterPlot");
+  const svg2 = d3.select("#linePlot");
 
   svg.selectAll("*").remove();
+  svg2.selectAll("*").remove();
+
+  document.querySelector("#scatterPlot").classList.add("hidden");
+  document.querySelector("#linePlot").classList.add("hidden");
+
   scatterPlotData = [];
   isGraphed = false;
+  isLineGraphed = false;
 }
-
-// // Set Dimensions
-// const xSize = 500;
-// const ySize = 500;
-// const margin = 40;
-// const xMax = xSize - margin * 2;
-// const yMax = ySize - margin * 2;
-
-// // Create Random Points
-// const numPoints = 100;
-// const data = [];
-// for (let i = 0; i < numPoints; i++) {
-//   data.push([Math.random() * xMax, Math.random() * yMax]);
-// }
-
-// // Append SVG Object to the Page
-// const svg = d3
-//   .select("#intensityGraph")
-//   .append("svg")
-//   .append("g")
-//   .attr("transform", "translate(" + margin + "," + margin + ")");
-
-// // X Axis
-// const x = d3.scaleLinear().domain([0, 500]).range([0, xMax]);
-
-// svg
-//   .append("g")
-//   .attr("transform", "translate(0," + yMax + ")")
-//   .call(d3.axisBottom(x));
-
-// // Y Axis
-// const y = d3.scaleLinear().domain([0, 500]).range([yMax, 0]);
-
-// svg.append("g").call(d3.axisLeft(y));
-
-// // Dots
-// svg
-//   .append("g")
-//   .selectAll("dot")
-//   .data(data)
-//   .enter()
-//   .append("circle")
-//   .attr("cx", function (d) {
-//     return d[0];
-//   })
-//   .attr("cy", function (d) {
-//     return d[1];
-//   })
-//   .attr("r", 3)
-//   .style("fill", "Red");
