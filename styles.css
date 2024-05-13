@@ -129,3 +129,8 @@ button:hover {
 .hidden {
   display: none;
 }
+
+#linePlot {
+  filter: blur(1px); /* Adjust the blur radius as needed */
+  transform: translate3d(0, 0, 0);
+}

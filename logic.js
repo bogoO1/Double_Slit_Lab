@@ -231,7 +231,7 @@ function graphPhoton() {
   const screenWidth = window.innerWidth;
   svg.attr("width", screenWidth);
 
-  const screenHeight = (window.innerWidth * 2) / 3;
+  const screenHeight = window.innerHeight * 0.5;
   svg.attr("height", screenHeight);
 
   // Select the SVG element
@@ -380,7 +380,7 @@ function createScatterPlot(plot) {
   }
 
   const screenWidth = window.innerWidth;
-  const screenHeight = (window.innerWidth * 2) / 3;
+  const screenHeight = window.innerHeight * 0.5;
 
   // var svg = d3.select("#scatterPlot"),
   //   margin = 20;
@@ -473,7 +473,7 @@ function drawDot(functionArray, arraySum, points) {
   }
 
   const screenWidth = window.innerWidth;
-  const screenHeight = (window.innerWidth * 2) / 3;
+  const screenHeight = window.innerHeight * 0.5;
 
   var svg = d3.select("#scatterPlot");
   var margin = { top: 25, right: 25, bottom: 25, left: 25 },
@@ -610,7 +610,7 @@ function drawShadedGraph() {
   }
 
   const screenWidth = window.innerWidth;
-  const screenHeight = (window.innerWidth * 2) / 3;
+  const screenHeight = window.innerHeight * 0.5;
 
   var svg = d3.select("#linePlot");
   var margin = { top: 25, right: 25, bottom: 25, left: 25 },
