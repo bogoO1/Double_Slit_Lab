@@ -525,7 +525,7 @@ function drawDot(functionArray, arraySum, points) {
       return yScale(d[1]);
     })
     .attr("transform", "translate(" + "25" + "," + 25 + ")")
-    .attr("r", 3)
+    .attr("r", screenWidth / 600)
     .style("fill", "Red")
     .style("opacity", 0.75);
 }
@@ -656,6 +656,19 @@ function drawShadedGraph() {
   linePlotData = linePlotData.concat(newData); // Concatenate the new data with the existing data array
 
   // Append new data points to the scatter plot
+  let widthOfLine = width / 100_000;
+
+  if (
+    navigator.userAgent.includes("Safari") &&
+    !navigator.userAgent.includes("Chrome")
+  ) {
+    // Code to execute if the browser is Safari
+    widthOfLine = width / 20_000;
+  } else {
+    // Code to execute if the browser is not Safari
+    widthOfLine = width / 100_000;
+  }
+
   svg
     .append("g")
     .selectAll("circle")
@@ -669,7 +682,7 @@ function drawShadedGraph() {
       return -25;
     })
     .attr("transform", "translate(" + "25" + "," + 25 + ")")
-    .attr("width", width / 100_000)
+    .attr("width", widthOfLine)
     .attr("height", height)
     .style("fill", "Red")
     .style("opacity", function (d) {
