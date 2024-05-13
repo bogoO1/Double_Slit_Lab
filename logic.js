@@ -341,6 +341,10 @@ function graphPhoton() {
 function binarySearch(array, value, l, r) {
   let m = Math.floor((r + l) / 2);
   if (array[m] === value) {
+    // if multiple of the same values exist, then grab value farthest to the left because the difference between the other values is zero.
+    while (array[m] === array[m - 1]) {
+      m--;
+    }
     return m;
   }
 
@@ -453,6 +457,8 @@ function createScatterPlot(plot) {
 
 var scatterPlotData = [];
 function drawDot(functionArray, arraySum, points) {
+  console.log(functionArray);
+
   if (isGraphed == false) {
     createScatterPlot("scatterPlot");
   }
@@ -496,6 +502,8 @@ function drawDot(functionArray, arraySum, points) {
     }
 
     intensity = Math.random() * 4.0 * I;
+
+    console.log(xPos + " " + index + " " + randomNum);
 
     newData.push([xPos, intensity]);
   }
@@ -588,7 +596,10 @@ function drawShadedGraph() {
   // }
   isLineGraphed = true;
 
+  linePlotData = [];
   createScatterPlot("linePlot");
+  const svg2 = d3.select("#linePlot");
+  svg2.selectAll("*").remove();
 
   try {
     var [lambda, d, a, L, I, xAxisWidth] = getInputVariables();
@@ -621,7 +632,11 @@ function drawShadedGraph() {
 
   //   newData.push([xPos, intensity]);
   // }
-  for (let i = 0; i < functionArray[functionArray.length - 1]; i++) {
+  for (
+    let i = 0;
+    i < functionArray[functionArray.length - 1];
+    i += functionArray[functionArray.length - 1] / 100_000
+  ) {
     let index = binarySearch(functionArray, i, 0, functionArray.length - 1);
 
     let xPos =
@@ -673,6 +688,7 @@ function eraseGraphs() {
   document.querySelector("#linePlot").classList.add("hidden");
 
   scatterPlotData = [];
+  linePlotData = [];
   isGraphed = false;
   isLineGraphed = false;
 }
