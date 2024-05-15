@@ -110,6 +110,7 @@ function getDistanceBetweenSlits() {
 }
 
 function getInputVariables() {
+  // v cannot be greater than c.
   let a = Number(document.getElementById("slitWidth").value);
   let L = Number(document.getElementById("screenDistance").value);
   let xAxisWidth = Number(document.getElementById("xAxis").value);
@@ -252,7 +253,7 @@ function graphPhoton() {
     .range([height - 25, 0]); // Adjust the range for the yScale
 
   // Generate the sine wave data
-  const sineData = d3
+  const data = d3
     .range(-xAxisWidth, xAxisWidth, (2 * xAxisWidth) / 100_000)
     .map(function (x) {
       return { x: x, y: getIntensityValue(x, lambda, d, a, L, I, xAxisWidth) };
@@ -301,40 +302,21 @@ function graphPhoton() {
   // Append the path to the SVG
   svg
     .append("path")
-    .datum(sineData)
+    .datum(data)
     .attr("fill", "none")
     .attr("stroke", "steelblue")
     .attr("stroke-width", 2)
     .attr("d", line);
 
-  // Title
-  svg
-    .append("text")
-    .attr("x", width / 2 + 100)
-    .attr("y", 100)
-    .attr("text-anchor", "middle")
-    .style("font-family", "Helvetica")
-    .style("font-size", 20)
-    .text("Double Slit Intensity");
-
   // X label
   svg
     .append("text")
-    .attr("x", width / 2 + 100)
-    .attr("y", height - 15 + 150)
+    .attr("x", width - width / 10)
+    .attr("y", height - 40)
     .attr("text-anchor", "middle")
     .style("font-family", "Helvetica")
     .style("font-size", 12)
     .text("y[m]");
-
-  // Y label
-  svg
-    .append("text")
-    .attr("text-anchor", "middle")
-    .attr("transform", "translate(60," + height + ")rotate(-90)")
-    .style("font-family", "Helvetica")
-    .style("font-size", 12)
-    .text("Intensity[W/m^2]");
 }
 
 // Returns the index of where the value should belong, biased to the right.
@@ -441,18 +423,6 @@ function createScatterPlot(plot) {
   // Append SVG Object to the Page
   // svg = d3.select("#intensityGraph").append("svg").append("g");
   // .attr("transform", "translate(" + margin + "," + margin + ")");
-
-  // Dots
-
-  // X label
-  svg
-    .append("text")
-    .attr("x", width / 2 + 100)
-    .attr("y", height - 15 + 150)
-    .attr("text-anchor", "middle")
-    .style("font-family", "Helvetica")
-    .style("font-size", 12)
-    .text("y[m]");
 }
 
 var scatterPlotData = [];
@@ -668,6 +638,8 @@ function drawShadedGraph() {
     // Code to execute if the browser is not Safari
     widthOfLine = width / 100_000;
   }
+
+  // widthOfLine = 0.1;
 
   svg
     .append("g")

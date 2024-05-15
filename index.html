@@ -139,13 +139,19 @@
         />
       </form>
 
+      <p>
+        *Simulation only works for wavelengths that experience significant
+        diffraction and interference.
+      </p>
+
       <button type="button" onclick="drawDots(1)">Draw 1</button>
       <button type="button" onclick="drawDots(100)">Draw 100</button>
       <button type="button" onclick="drawDots(1000)">Draw 1000</button>
-      <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
+      <button type="button" onclick="drawDots(100000)">Draw 100000</button>
       <button type="button" onclick="drawShadedGraph()">
-        Draw Shaded Graph
+        Draw a Gazillion Dots
       </button>
+      <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
       <button type="button" onclick="graphPhoton()">Graph</button>
     </div>
     <svg id="scatterPlot" class="hidden" height="300" width="300"></svg>
