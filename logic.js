@@ -587,13 +587,24 @@ function drawShadedGraph() {
     width = screenWidth - margin.left - margin.right,
     height = screenHeight - margin.top - margin.bottom;
 
-  const numPoints = width * 10;
+  var divisionsPerPixel = 2;
+
+  let accuracyInput = Number(
+    document.getElementById("divisionsPerPixel").value
+  );
+
+  if (typeof accuracyInput !== "number" || accuracyInput < 0) {
+    throw "Accuracy must be a number greater than zero.";
+  }
+
+  divisionsPerPixel = accuracyInput;
+
   var newData = [];
 
   for (
     let i = -xAxisWidth;
     i < xAxisWidth;
-    i += (2 * xAxisWidth) / (width * 10)
+    i += (2 * xAxisWidth) / (width * divisionsPerPixel)
   ) {
     newData.push([i, getIntensityValue(i, lambda, d, a, L, I, xAxisWidth)]);
   }
@@ -602,7 +613,7 @@ function drawShadedGraph() {
 
   // Append new data points to the scatter plot
 
-  widthOfLine = 1 / 10;
+  widthOfLine = 1 / divisionsPerPixel;
 
   svg
     .append("g")
@@ -639,4 +650,14 @@ function eraseGraphs() {
   linePlotData = [];
   isGraphed = false;
   isLineGraphed = false;
+}
+
+function toggleSettings() {
+  var settings = document.getElementById("settings");
+  settings.classList.toggle("show");
+}
+
+function saveSettings() {
+  // Add code to save settings here
+  alert("Settings saved!");
 }

@@ -139,6 +139,27 @@
         />
       </form>
 
+      <button class="tab-btn" onclick="toggleSettings()">
+        Advanced Settings &#9660;
+      </button>
+      <div class="settings" id="settings">
+        <!-- Additional settings content goes here -->
+        <label for="divisionsPerPixel">Accuracy for Gazillion Dots</label>
+        <input
+          type="range"
+          id="divisionsPerPixel"
+          name="divisionsPerPixel"
+          min=".1"
+          max="10"
+          step=".1"
+          placeholder="Enter Accuracy..."
+          class="slider"
+          value="2"
+        />
+
+        <p>*For high accuracies, you may have to zoom in to see effects.</p>
+      </div>
+
       <p>
         *Simulation only works for wavelengths that experience significant
         diffraction and interference.
