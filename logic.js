@@ -587,59 +587,22 @@ function drawShadedGraph() {
     width = screenWidth - margin.left - margin.right,
     height = screenHeight - margin.top - margin.bottom;
 
-  const numPoints = 100_000;
+  const numPoints = width * 10;
   var newData = [];
-  // for (let i = 0; i < numPoints; i++) {
-  //   let index = i;
 
-  //   let xPos =
-  //     index * ((2 * xAxisWidth) / (functionArray.length - 1)) - xAxisWidth;
-
-  //   let intensity = functionArray[index];
-  //   if (index > 0) {
-  //     intensity -= functionArray[index - 1];
-  //   }
-
-  //   newData.push([xPos, intensity]);
-  // }
   for (
-    let i = 0;
-    i < functionArray[functionArray.length - 1];
-    i += functionArray[functionArray.length - 1] / 100_000
+    let i = -xAxisWidth;
+    i < xAxisWidth;
+    i += (2 * xAxisWidth) / (width * 10)
   ) {
-    let index = binarySearch(functionArray, i, 0, functionArray.length - 1);
-
-    let xPos =
-      index * ((2 * xAxisWidth) / (functionArray.length - 1)) - xAxisWidth;
-
-    // intensity is different of currend and prev index, unless index is zero.
-    let intensity = functionArray[index];
-    if (index > 0) {
-      intensity -= functionArray[index - 1];
-    }
-
-    intensity = Math.random() * 4.0 * I;
-
-    newData.push([xPos, intensity]);
+    newData.push([i, getIntensityValue(i, lambda, d, a, L, I, xAxisWidth)]);
   }
   // Update your existing data array with the new data
   linePlotData = linePlotData.concat(newData); // Concatenate the new data with the existing data array
 
   // Append new data points to the scatter plot
-  let widthOfLine = width / 100_000;
 
-  if (
-    navigator.userAgent.includes("Safari") &&
-    !navigator.userAgent.includes("Chrome")
-  ) {
-    // Code to execute if the browser is Safari
-    widthOfLine = width / 20_000;
-  } else {
-    // Code to execute if the browser is not Safari
-    widthOfLine = width / 100_000;
-  }
-
-  // widthOfLine = 0.1;
+  widthOfLine = 1 / 10;
 
   svg
     .append("g")
@@ -658,7 +621,7 @@ function drawShadedGraph() {
     .attr("height", height)
     .style("fill", "Red")
     .style("opacity", function (d) {
-      return d[1] / I ** 2;
+      return d[1] / (4 * I);
     });
 }
 
