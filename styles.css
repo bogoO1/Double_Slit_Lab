@@ -130,11 +130,11 @@ button:hover {
   display: none;
 }
 
-/* #linePlot {
+#linePlot {
   filter: blur(1px);
   transform: translate3d(0, 0, 0);
 }
-
+/* 
 @supports (-webkit-hyphens: none) {
   #linePlot {
     filter: none;
