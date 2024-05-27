@@ -26,28 +26,28 @@
           <option value="Photon">Photon</option>
           <option value="Electron">Electron</option>
           <option value="Proton">Proton</option>
-          <option value="Mass">Mass</option>
+          <option value="Mass">(Large) Mass</option>
         </select>
 
-        <label for="xAxis">Positive side X-Axis Domain [m]:</label>
+        <label for="xAxis">X-Axis Max [m]:</label>
         <input
           type="number"
           id="xAxis"
           name="xAxis"
-          min=".000001"
+          min="0"
           placeholder="x-axis Width..."
           value="1"
         />
 
         <label class="for2Slit" for="slitDistance"
-          >Distance between slits [μm]:</label
+          >Distance between Slits [μm]:</label
         >
         <input
           class="for2Slit"
           type="number"
           id="slitDistance"
           name="slitDistance"
-          min=".001"
+          min="0"
           placeholder="Slit Distance..."
           value="10"
         />
@@ -58,7 +58,7 @@
           type="number"
           id="lines/mm"
           name="lines/mm"
-          min=".0000001"
+          min="0"
           placeholder="lines/mm..."
           value="1000"
         />
@@ -78,19 +78,19 @@
           type="number"
           id="screenDistance"
           name="screenDistance"
-          min="1"
+          min="0"
           placeholder="Screen Distance..."
           value="1"
         />
       </form>
 
       <form id="photonForm">
-        <label for="wavelength">Photon wavelength [nm]:</label>
+        <label for="wavelength">Photon Wavelength [nm]:</label>
         <input
           type="number"
           id="wavelength"
           name="wavelength"
-          min="1"
+          min="0"
           placeholder="wavelength..."
           value="550"
         />
@@ -136,6 +136,7 @@
           name="mass"
           placeholder="Mass..."
           value="1"
+          min="0"
         />
       </form>
 
@@ -165,15 +166,17 @@
         diffraction and interference.
       </p>
 
-      <button type="button" onclick="drawDots(1)">Draw 1</button>
-      <button type="button" onclick="drawDots(100)">Draw 100</button>
-      <button type="button" onclick="drawDots(1000)">Draw 1000</button>
-      <button type="button" onclick="drawDots(100000)">Draw 100000</button>
+      <button type="button" onclick="drawDots(1)">Fire 1</button>
+      <button type="button" onclick="drawDots(100)">Fire 100</button>
+      <button type="button" onclick="drawDots(1000)">Fire 1000</button>
+      <button type="button" onclick="drawDots(100000)">Fire 100000</button>
       <button type="button" onclick="drawShadedGraph()">
-        Draw a Gazillion Dots
+        Fire a Gazillion
+      </button>
+      <button type="button" id="intensityGraphButton" onclick="graphPhoton()">
+        Graph
       </button>
       <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
-      <button type="button" onclick="graphPhoton()">Graph</button>
     </div>
     <svg id="scatterPlot" class="hidden" height="300" width="300"></svg>
     <svg id="linePlot" class="hidden" height="300" width="300"></svg>

@@ -82,6 +82,18 @@ window.onload = function () {
     },
     false
   );
+
+  // Execute a function when the user presses a key on the keyboard
+  document.addEventListener("keypress", function (event) {
+    // If the user presses the "Enter" key on the keyboard
+    console.log("HIT KEY");
+    if (event.key === "Enter") {
+      // Cancel the default action, if needed
+      event.preventDefault();
+      // Trigger the button element with a click
+      document.getElementById("intensityGraphButton").click();
+    }
+  });
 };
 
 var isGraphed = false;
@@ -92,7 +104,7 @@ function getDistanceBetweenSlits() {
   } else if (numSlits == 2) {
     let d = Number(document.getElementById("slitDistance").value);
     if (typeof d !== "number" || d <= 0) {
-      throw "Inputs must all be numbers greater than zero";
+      throw "Distance between slits must be greater than zero.";
     }
     return d * 1e-6;
   } else if (numSlits == 0) {
@@ -100,7 +112,7 @@ function getDistanceBetweenSlits() {
 
     let linesPermm = Number(document.getElementById("lines/mm").value);
     if (typeof linesPermm !== "number" || linesPermm <= 0) {
-      throw "Inputs must all be numbers greater than zero";
+      throw "Lines/mm must be greater than zero.";
     }
 
     let d = (1 / linesPermm) * 1e-3;
@@ -121,6 +133,18 @@ function getInputVariables() {
     typeof xAxisWidth !== "number"
   ) {
     throw "Inputs must all be numbers";
+  }
+
+  if (a <= 0) {
+    throw "Slit width must be greater than zero.";
+  }
+
+  if (L <= 0) {
+    throw "Distance to screen must be greater than zero.";
+  }
+
+  if (xAxisWidth <= 0) {
+    throw "X-Axis Max must be greater than zero.";
   }
 
   a *= 1e-9;
@@ -144,21 +168,23 @@ function getInputVariables() {
     // check if undefined or nill
     if (
       typeof d !== "number" ||
-      typeof a !== "number" ||
-      typeof L !== "number" ||
       typeof energy !== "number" ||
-      typeof xAxisWidth !== "number" ||
       typeof mass !== "number" ||
       typeof velocity !== "number"
     ) {
       throw "Inputs must all be numbers";
     }
 
-    if (xAxisWidth <= 0) {
-      throw "x-Axis width must be greater than zero";
-    }
     if (energy <= 0) {
       throw "Energy must be greater than zero";
+    }
+
+    if (d <= 0) {
+      throw "Distance between slits must be greater than zero.";
+    }
+
+    if (mass <= 0) {
+      throw "Mass must be greater than zero.";
     }
 
     d *= 1e-6;
@@ -193,16 +219,22 @@ function getInputVariables() {
     if (
       typeof lambda !== "number" ||
       typeof d !== "number" ||
-      typeof a !== "number" ||
-      typeof L !== "number" ||
       typeof I !== "number" ||
       typeof xAxisWidth !== "number"
     ) {
       throw "Inputs must all be numbers";
     }
 
-    if (xAxisWidth <= 0) {
-      throw "x-Axis width must be greater than zero";
+    if (I <= 0) {
+      throw "Intensity must be greater than zero";
+    }
+
+    if (lambda <= 0) {
+      throw "Wavelength must be greater than zero";
+    }
+
+    if (d <= 0) {
+      throw "Distance between slits must be greater than zero";
     }
 
     lambda *= 1e-9;
@@ -223,6 +255,8 @@ function graphPhoton() {
     alert(err);
     throw "";
   }
+
+  document.querySelector("#intensityGraph").classList.remove("hidden");
 
   var svg = d3.select("#intensityGraph");
 
@@ -639,12 +673,15 @@ function drawShadedGraph() {
 function eraseGraphs() {
   const svg = d3.select("#scatterPlot");
   const svg2 = d3.select("#linePlot");
+  const svg3 = d3.select("#intensityGraph");
 
   svg.selectAll("*").remove();
   svg2.selectAll("*").remove();
+  svg3.selectAll("*").remove();
 
   document.querySelector("#scatterPlot").classList.add("hidden");
   document.querySelector("#linePlot").classList.add("hidden");
+  document.querySelector("#intensityGraph").classList.add("hidden");
 
   scatterPlotData = [];
   linePlotData = [];
