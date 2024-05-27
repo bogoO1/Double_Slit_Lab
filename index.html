@@ -18,7 +18,7 @@
         <select id="slit" name="slit">
           <option value="1">1</option>
           <option value="2" selected="selected">2</option>
-          <option value="n">n</option>
+          <option value="n">n >> 2</option>
         </select>
 
         <label for="particle">Enter Particle</label>
@@ -28,16 +28,6 @@
           <option value="Proton">Proton</option>
           <option value="Mass">(Large) Mass</option>
         </select>
-
-        <label for="xAxis">X-Axis Max [m]:</label>
-        <input
-          type="number"
-          id="xAxis"
-          name="xAxis"
-          min="0"
-          placeholder="x-axis Width..."
-          value="1"
-        />
 
         <label class="for2Slit" for="slitDistance"
           >Distance between Slits [μm]:</label
@@ -145,6 +135,16 @@
       </button>
       <div class="settings" id="settings">
         <!-- Additional settings content goes here -->
+        <label for="xAxis">X-Axis Max [m]:</label>
+        <input
+          type="number"
+          id="xAxis"
+          name="xAxis"
+          min="0"
+          placeholder="x-axis Width..."
+          value="1"
+        />
+
         <label for="divisionsPerPixel">Accuracy for Gazillion Dots</label>
         <input
           type="range"
