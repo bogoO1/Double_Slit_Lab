@@ -150,15 +150,18 @@
           type="range"
           id="divisionsPerPixel"
           name="divisionsPerPixel"
-          min=".1"
+          min="1"
           max="10"
           step=".1"
           placeholder="Enter Accuracy..."
           class="slider"
-          value="2"
+          value="1"
         />
 
-        <p>*For high accuracies, you may have to zoom in to see effects.</p>
+        <p>
+          *For high accuracies, you will have to scroll horizontally to see the
+          entire graph.
+        </p>
       </div>
 
       <p>
@@ -179,7 +182,10 @@
       <button type="button" onclick="eraseGraphs()">Reset Graphs</button>
     </div>
     <svg id="scatterPlot" class="hidden" height="300" width="300"></svg>
-    <svg id="linePlot" class="hidden" height="300" width="300"></svg>
+
+    <div class="SVG hidden">
+      <svg id="linePlot" class="hidden" height="300" width="300"></svg>
+    </div>
     <svg id="intensityGraph" height="300" width="300"></svg>
     <div id="plot"></div>
   </body>

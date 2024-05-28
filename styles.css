@@ -168,3 +168,24 @@ button:hover {
 .settings.show {
   display: block;
 }
+
+.SVG {
+  overflow-x: scroll;
+  border-style: solid;
+  border-color: black;
+  border-radius: 8px;
+}
+
+.SVG::-webkit-scrollbar:horizontal {
+  height: 11px;
+}
+
+.SVG::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 1);
+  /* should match background, can't be transparent */
+  background-color: rgba(0, 0, 0, 1);
+}
+.SVG::-webkit-scrollbar {
+  -webkit-appearance: none;
+}

@@ -590,6 +590,7 @@ function drawDots(numDots) {
 var linePlotData = [];
 function drawShadedGraph() {
   document.querySelector("#linePlot").classList.remove("hidden");
+  document.querySelector(".SVG").classList.remove("hidden");
 
   const functionArray = getFunctionArray();
 
@@ -627,25 +628,37 @@ function drawShadedGraph() {
     document.getElementById("divisionsPerPixel").value
   );
 
-  if (typeof accuracyInput !== "number" || accuracyInput < 0) {
-    throw "Accuracy must be a number greater than zero.";
-  }
+  document
+    .getElementById("linePlot")
+    .setAttribute("width", screenWidth * accuracyInput + "px");
 
-  divisionsPerPixel = accuracyInput;
+  if (typeof accuracyInput !== "number" || accuracyInput < 1) {
+    throw "Accuracy must be a number greater than 1.";
+  }
 
   var newData = [];
 
+  var scaledxAxisWidth = xAxisWidth;
+
   for (
-    let i = -xAxisWidth;
-    i < xAxisWidth;
-    i += (2 * xAxisWidth) / (width * divisionsPerPixel)
+    let i = -scaledxAxisWidth;
+    i < scaledxAxisWidth;
+    i += (2 * scaledxAxisWidth) / (width * accuracyInput * divisionsPerPixel)
   ) {
-    newData.push([i, getIntensityValue(i, lambda, d, a, L, I, xAxisWidth)]);
+    newData.push([
+      i,
+      getIntensityValue(i, lambda, d, a, L, I, scaledxAxisWidth),
+    ]);
   }
   // Update your existing data array with the new data
   linePlotData = linePlotData.concat(newData); // Concatenate the new data with the existing data array
 
   // Append new data points to the scatter plot
+
+  var xScaleScaled = d3
+    .scaleLinear()
+    .domain([-scaledxAxisWidth, scaledxAxisWidth])
+    .range([0, width * accuracyInput]);
 
   widthOfLine = 1 / divisionsPerPixel;
 
@@ -656,12 +669,11 @@ function drawShadedGraph() {
     .enter()
     .append("rect")
     .attr("x", function (d) {
-      return xScale(d[0]);
+      return xScaleScaled(d[0]);
     })
     .attr("y", function (d) {
-      return -25;
+      return 0;
     })
-    .attr("transform", "translate(" + "25" + "," + 25 + ")")
     .attr("width", widthOfLine)
     .attr("height", height)
     .style("fill", "Red")
@@ -682,6 +694,7 @@ function eraseGraphs() {
   document.querySelector("#scatterPlot").classList.add("hidden");
   document.querySelector("#linePlot").classList.add("hidden");
   document.querySelector("#intensityGraph").classList.add("hidden");
+  document.querySelector(".SVG").classList.add("hidden");
 
   scatterPlotData = [];
   linePlotData = [];
