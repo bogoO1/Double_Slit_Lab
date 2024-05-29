@@ -86,7 +86,6 @@ window.onload = function () {
   // Execute a function when the user presses a key on the keyboard
   document.addEventListener("keypress", function (event) {
     // If the user presses the "Enter" key on the keyboard
-    console.log("HIT KEY");
     if (event.key === "Enter") {
       // Cancel the default action, if needed
       event.preventDefault();
@@ -461,8 +460,6 @@ function createScatterPlot(plot) {
 
 var scatterPlotData = [];
 function drawDot(functionArray, arraySum, points) {
-  console.log(functionArray);
-
   if (isGraphed == false) {
     createScatterPlot("scatterPlot");
   }
@@ -506,8 +503,6 @@ function drawDot(functionArray, arraySum, points) {
     }
 
     intensity = Math.random() * 4.0 * I;
-
-    console.log(xPos + " " + index + " " + randomNum);
 
     newData.push([xPos, intensity]);
   }
