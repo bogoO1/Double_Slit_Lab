@@ -5,8 +5,9 @@ var particleType = "Photon";
 var isLineGraphed = false;
 
 const massOfParticles = {
-  Electron: 9.1093837e-31,
-  Proton: 1.67262192e-27,
+  Electron: 0.5109989461e6, //9.1093837e-31, //0.5109989461e6,
+  Proton: 938.272e6, //938.272e6, //1.67262192e-27,
+  Muon: 105.6583755e6, //105.6583755e6, //1.883531627e-28,
 };
 
 window.onload = function () {
@@ -27,7 +28,7 @@ window.onload = function () {
     if (particle == "Photon") {
       particleType = "Photon";
       photonForm.style.display = "block";
-    } else if (particle == "Electron" || particle == "Proton") {
+    } else if (particle == "Electron" || particle == "Proton" || "Muon") {
       particleType = particle;
       atomicMassForm.style.display = "block";
     } else if (particle == "Mass") {
@@ -187,7 +188,7 @@ function getInputVariables() {
     }
 
     d *= 1e-6;
-    energy *= 1;
+    // energy *= 1.60218e-19;
 
     const c = 299_792_458;
 
@@ -196,14 +197,20 @@ function getInputVariables() {
 
       energy = gamma * Math.pow(mass * Math.pow(c, 2), 2);
 
-      var lambda = 6.262e-34 / (mass * velocity);
+      var lambda = 6.62607015e-34 / (mass * velocity);
     } else {
+      let restEnergy = mass; //* Math.pow(c, 2);
+      let totalEnergy = restEnergy + energy;
+
       let momentum = Math.sqrt(
-        (Math.pow(energy, 2) - Math.pow(mass * Math.pow(c, 2), 2)) /
-          Math.pow(c, 2)
+        (Math.pow(totalEnergy, 2) - Math.pow(restEnergy, 2)) / Math.pow(c, 2)
       );
 
-      var lambda = 4.136e-15 / momentum;
+      console.log(restEnergy + " " + totalEnergy);
+
+      var lambda = 4.136e-15 / momentum; // 4.136e-15
+
+      console.log("LAMBDA: " + lambda);
     }
 
     d = getDistanceBetweenSlits();
